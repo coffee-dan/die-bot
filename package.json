@@ -1,0 +1,11 @@
+{
+  "name": "die-bot",
+  "version": "0.0.1",
+  "description": "Discord bot for rolling dice using simple syntax",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniel Ramirez",
+  "license": "0BSD"
+}
