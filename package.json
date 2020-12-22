@@ -1,6 +1,6 @@
 {
   "name": "die-bot",
-  "version": "0.0.1",
+  "version": "0.2.1",
   "description": "Discord bot for rolling dice using simple syntax",
   "main": "index.js",
   "scripts": {
