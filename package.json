@@ -4,8 +4,20 @@
   "description": "Discord bot for rolling dice using simple syntax",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Daniel Ramirez",
-  "license": "0BSD"
+  "license": "0BSD",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coffee-dan/die-bot"
+  }
 }
