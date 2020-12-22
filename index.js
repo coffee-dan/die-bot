@@ -1,71 +1,41 @@
+const fs = require('fs')
 const Discord = require('discord.js')
-const client = new Discord.Client()
 const { prefix } = require('./config.json')
-// only needed for local testing
 require('dotenv').config()
+
+const client = new Discord.Client()
+client.commands = new Discord.Collection()
+
+const commandFiles = fs
+	.readdirSync('./commands')
+	.filter(file => file.endsWith('.js'))
+
+for (const file of commandFiles) {
+	const cmd = require(`./commands/${file}`)
+
+	client.commands.set(cmd.name, cmd)
+}
 
 // Announce login
 client.once('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`)
 })
 
-function handleDiceRolls(numOfRolls, sizeOfDie) {
-	// calculate sum of dice rolls of the specified dice size
-	let result = 0
-	for (let i = 0; i < numOfRolls; i++) {
-		const dieRoll = Math.floor(Math.random() * sizeOfDie + 1)
-		result += dieRoll
-
-		console.log(dieRoll)
-	}
-
-	return result
-}
-
 // listen for messages
 client.on('message', message => {
-	// check for prefix
-	if (message.content.startsWith(prefix)) {
-		// remove prefix from string for further processing
-		const issuedCommand = message.content.replace(prefix, '')
-		console.log(issuedCommand)
-		// check for proper command syntax
-		// Optional first param: number 1 to 9
-		// d or D
-		// Required second param: number 1 to 999
-		if (message.content.search(/[1-9]?d[1-9][0-9]{0,2}/i) !== -1) {
-			message.channel.send(`this??? ${issuedCommand}...`)
+	// if the message either doesn't start with the prefix or was sent by a bot, exit early
+	if (!message.content.startsWith(prefix) || message.author.bot) return
 
-			// split into parameters
-			const params = issuedCommand.split('d')
+	// modify args by removing first item and holding it in `command`
+	const args = message.content.slice(prefix.length).trim().split(/ +/)
+	const command = args.shift().toLowerCase()
 
-			let sum
-			if (params[0] === '') {
-				// handle no first param case
-				message.channel.send(`ok ok, so roll a d${params[1]}`)
-				sum = Math.floor(Math.random() * params[1] + 1)
-			} else {
-				// handle normal case
-				message.channel.send(
-					`ok ok, so roll ${params[0]} d${params[1]}`
-				)
-				sum = handleDiceRolls(params[0], params[1])
-			}
+	if (!client.commands.has(command)) return
 
-			if (sum === 0) {
-				message.channel.send('you fucking died')
-			} else {
-				// give use sum total of their roll
-				message.channel.send(
-					`the sum of the thing you wanted is ${sum}`
-				)
-			}
-		} else {
-			// alert user that the syntax was wrong
-			message.channel.send(
-				"i don't know what you are trying to make me do"
-			)
-		}
+	try {
+		client.commands.get(command).execute(message, args)
+	} catch (error) {
+		console.error(error)
 	}
 })
 
