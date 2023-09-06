@@ -1,5 +1,5 @@
 name: Deploy
-run-name: die-bot deploy started by @${{ github.actor }} #${{ github.ref:0:7 }}
+run-name: die-bot deploy started by @${{ github.actor }} ${{ github.sha }}
 
 concurrency: deploy
 
@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: github.sha
       - uses: akhileshns/heroku-deploy@v3.12.14 # https://github.com/AkhileshNS/heroku-deploy
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
