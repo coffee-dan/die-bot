@@ -1,0 +1,21 @@
+name: Deploy
+run-name: die-bot deploy started by @${{ github.actor }} #${{ github.ref:0:7 }}
+
+concurrency: deploy
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: akhileshns/heroku-deploy@v3.12.14 # https://github.com/AkhileshNS/heroku-deploy
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "die-bot" # only while testing, change once confident this workflow works
+          heroku_email: "info@danielramirez.xyz"
+          dontautocreate: true
