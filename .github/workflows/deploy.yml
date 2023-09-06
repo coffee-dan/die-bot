@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: github.sha
+          ref: ${{ github.sha }}
       - uses: akhileshns/heroku-deploy@v3.12.14 # https://github.com/AkhileshNS/heroku-deploy
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
